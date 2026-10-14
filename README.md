@@ -124,18 +124,30 @@ task_kit/
 │   └── spec-driven.md                 # 方法论详解：底层逻辑、五段式拆解、裁剪规则
 ├── core/
 │   ├── SKILL.md                       # 工作流定义（Agent Skills 标准格式）
-│   └── templates/                     # 7 个阶段模板
-│       ├── 00-constitution.md         # 项目宪法
+│   ├── scripts/
+│   │   └── task-new.sh                # 可选脚手架：自动分配三位编号建任务目录
+│   └── templates/                     # 8 个阶段模板
+│       ├── 00-constitution.md         # 项目宪法（版本号 + Sync Impact Report + Governance）
 │       ├── 00-project.md              # 项目索引
 │       ├── 01-problem.md              # 问题定义书
 │       ├── 02-plan.md                 # 方案骨架
 │       ├── 03-review.md               # 评审卡
 │       ├── 04-log.md                  # 执行周志
-│       └── 05-aar.md                  # AAR 复盘卡
+│       ├── 05-aar.md                  # AAR 复盘卡
+│       └── checklist.md               # 质量门清单（task.check 落盘用）
 └── adapters/
     ├── claude-code-command.md         # Claude Code 斜杠命令适配
     └── portable-rules.md              # 任意 Agent 通用规则（自包含）
 ```
+
+## 🆕 v1.1.0 — 参照 Spec Kit 工程化形态升级
+
+- **任务目录编号化**：`tasks/NNN-slug/`（如 `tasks/001-rgbd技术调研/`），三位序号保证排序与跨会话定位，兼容旧的无编号目录
+- **宪法修订纪律**：版本号语义化（MAJOR/MINOR/PATCH）+ 文件头 Sync Impact Report 块 + Governance 修订规则
+- **质量门落盘**：`task.check` 产出 `checklists/<类型>.md`，CHKxxx 编号、reviewer-owned 语义（`[x]` = 复核通过，≠ 做完）
+- **任务目录扩展区**：`00-05` 核心编号保留；素材进 `materials/`，质量门进 `checklists/`，任务特定产物从 `06` 起编号
+- **闸门语义显式化**：clarify/review 为 approve/reject 门，未过闸不得进入下一阶段
+- **可选脚手架**：`core/scripts/task-new.sh` 自动分配编号并初始化 00-STATE.md（bash 零依赖，无脚本时按编号规则手工执行）
 
 ## 🧭 方法论源流
 

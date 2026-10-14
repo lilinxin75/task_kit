@@ -10,26 +10,28 @@
 在当前项目下维护 `.task-kit/`：
 ```
 .task-kit/
-├── CONSTITUTION.md        # 项目宪法：使命/价值优先级/决策原则/红线/经验升级区/修订记录
+├── CONSTITUTION.md        # 项目宪法：版本号+Sync Impact Report/使命/决策原则/红线/经验升级区/Governance
 ├── PROJECT.md             # 项目索引：任务清单、状态、跨任务依赖、Backlog
-└── tasks/<任务slug>/
+└── tasks/<NNN-slug>/      # 三位序号（001、002…）+ 短 slug
     ├── 00-STATE.md        # 任务状态卡：当前阶段、关键结论、下一步、更新时间
     ├── 01-problem.md      # 问题定义书
     ├── 02-plan.md         # 方案骨架
     ├── 03-review.md       # 评审卡
     ├── 04-log.md          # 执行周志（追加式）
-    └── 05-aar.md          # 复盘卡
+    ├── 05-aar.md          # 复盘卡
+    ├── checklists/        # 质量门清单（task.check 落盘，CHKxxx 编号）
+    └── materials/         # 素材与附件（00-05 编号为核心契约保留，任务特定产物 06 起或入 materials/）
 ```
 每次写完产物同步更新 00-STATE.md；任务状态变化同步 PROJECT.md。
 
 ## 命令（用户说人话，按语义识别）
 - **task.init <项目名>**：建 `.task-kit/` 骨架，引导立宪法
-- **task.constitution**：制定/修订宪法。含：使命与价值优先级、决策原则、协作红线、流程约束、经验升级区、修订记录。修订只追加记录，不改历史
-- **task.new <任务名>**：建任务目录，登记 PROJECT.md，进入澄清
+- **task.constitution**：制定/修订宪法。含：版本号+文件头 Sync Impact Report、使命与价值优先级、决策原则、协作红线、流程约束、经验升级区、Governance 修订规则（版本语义化：MAJOR 红线语义变化 / MINOR 新增扩展 / PATCH 措辞澄清）。修订只追加记录，不改历史
+- **task.new <任务名>**：分配下一个三位编号，建任务目录，登记 PROJECT.md，进入澄清
 - **task.clarify**：按五要素澄清（背景与目标/成功标准SMART/交付物形态/时间与资源/边界与禁区）→ 一段话复述请用户确认 → 落盘 01。最多问一轮（≤6问），禁止拿猜测当澄清
 - **task.plan**：MECE 议题树（3-5 子议题）→ 影响×难度×见效速度打分排序（80% 精力压前 20%）→ 可证伪的 Day-1 假设（写明"错了用什么验证"）→ 行动计划（留 ≥15% 缓冲）→ 落盘 02
 - **task.review**：压缩为 SCQA 汇报稿（结论前置 30 秒）+ 方案 A/B/C 选择题（含推荐、理由、风险、预案）→ 会议结论必须记录：拍板/否决/待定/下一步 owner+deadline → 落盘 03。禁止抛问答题
-- **task.check**：宪法合规 + 产物一致性校验（01 目标 vs 02 计划 vs 03 拍板 vs 04 进度），输出 pass/fail 清单
+- **task.check**：宪法合规 + 产物一致性校验（01 目标 vs 02 计划 vs 03 拍板 vs 04 进度），输出 pass/fail 清单并落盘 checklists/<校验类型>.md
 - **task.track**：五段式周志（已完成/进行中/待解决/下一步/需要支持）追加到 04，附契约校验（能否追溯到 02/03？假设是否被推翻？有无黄灯/红灯？）
 - **task.aar**：四问复盘（原计划/实际发生/为什么有差异/下次怎么办）→ 规则必须是"下次遇到 X 就做 Y"形式；项目级规则晋升进宪法（带来源任务+修订记录）→ 落盘 05
 - **task.done**：关闭任务，更新 PROJECT.md，提示 specify 下一个任务

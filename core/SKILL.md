@@ -23,17 +23,26 @@ description: 管理任务版 Spec Kit。项目级宪法约束所有任务，任�
 
 ```
 .task-kit/
-├── CONSTITUTION.md        # 项目宪法：使命/价值优先级/决策原则/红线/经验升级区
-├── PROJECT.md             # 项目索引：任务清单、状态、跨任务依赖、Backlog
+├── CONSTITUTION.md          # 项目宪法：版本号 + Sync Impact Report + 五节结构
+├── PROJECT.md               # 项目索引：任务清单、状态、跨任务依赖、Backlog
+├── scripts/
+│   └── task-new.sh          # 可选脚手架：自动分配编号建任务目录（无脚本时 task.new 手工按规则编号）
 └── tasks/
-    └── <任务slug>/
+    └── NNN-<任务slug>/      # 三位序号（001、002…），保证排序与跨会话定位
         ├── 00-STATE.md      # 任务状态卡：当前阶段、关键结论、下一步、更新时间
         ├── 01-problem.md    # 问题定义书（阶段一产出）
         ├── 02-plan.md       # 方案骨架（阶段二产出）
         ├── 03-review.md     # 评审汇报稿与拍板记录（阶段三产出）
         ├── 04-log.md        # 执行周志，追加式（阶段四产出）
-        └── 05-aar.md        # 复盘卡（阶段五产出）
+        ├── 05-aar.md        # 复盘卡（阶段五产出）
+        ├── checklists/      # 质量门产物（task.check 落盘，CHKxxx 编号）
+        └── materials/       # 素材与附件：引用资料、中间产物、临时分析
 ```
+
+**编号与扩展约定**：
+1. `00-05` 编号为核心契约文件保留，不得挪作他用；任务特定产物从 `06` 起自由编号，或统一放 `materials/`。
+2. 任务 slug 建议中文或小写英文加连字符，与编号用 `-` 连接（如 `tasks/001-rgbd技术调研/`）。
+3. `checklists/` 与 `materials/` 为约定子目录，按需创建，不强求每任务都有。
 
 每次写完任一产物文件后，必须同步更新该任务的 `00-STATE.md`；任务状态变化时同步更新 `PROJECT.md`。
 
@@ -43,15 +52,26 @@ description: 管理任务版 Spec Kit。项目级宪法约束所有任务，任�
 |---|---|---|
 | `task.init <项目名>` | — | 建 `.task-kit/` 骨架，引导立宪法 |
 | `task.constitution` | `/constitution` | 制定或修订项目宪法（套用 templates/00-constitution.md），修订须追加修订记录 |
-| `task.new <任务名>` | `/specify` | 建任务目录 + 00-STATE.md，登记进 PROJECT.md，进入阶段一 |
-| `task.clarify` | `/specify`+`/clarify` | 阶段一：按五要素澄清 → 用户确认复述后写 01-problem.md |
+| `task.new <任务名>` | `/specify` | 分配下一个三位编号，建任务目录 + 00-STATE.md，登记进 PROJECT.md，进入阶段一 |
+| `task.clarify` | `/specify`+`/clarify` | 阶段一闸门：按五要素澄清 → 用户确认复述后写 01-problem.md |
 | `task.plan` | `/plan`+`/tasks` | 阶段二：基于 01 拆 MECE 议题树、打分排序、列假设与行动计划 → 02-plan.md |
-| `task.review` | 规格评审 | 阶段三：把 02 压缩成 SCQA + 选择题汇报稿 → 03-review.md 记录拍板/否决/待定 |
+| `task.review` | 规格评审 | 阶段三闸门：把 02 压缩成 SCQA + 选择题汇报稿 → 03-review.md 记录拍板/否决/待定 |
 | `task.track` | `/implement` | 阶段四：五段式周志追加到 04-log.md；发现偏差提示回 task.review |
-| `task.check` | `/analyze` | 宪法与一致性校验：①当前任务产物是否违反宪法红线/决策原则；②各产物间是否互相矛盾（01 目标 vs 02 计划 vs 03 拍板 vs 04 进度）；输出 pass/fail 清单 |
+| `task.check` | `/analyze`+`/checklist` | 宪法与一致性校验：①当前任务产物是否违反宪法红线/决策原则；②各产物间是否互相矛盾（01 目标 vs 02 计划 vs 03 拍板 vs 04 进度）；输出 pass/fail 清单并落盘 `checklists/<校验类型>.md` |
 | `task.aar` | `/converge` | 阶段五：四问复盘 → 05-aar.md；把项目级规则晋升进宪法（追加修订记录） |
 | `task.done` | — | 关闭任务：确认 05-aar 完成 → PROJECT.md 状态改为已完成 → 提示从 Backlog specify 下一个任务 |
 | `task.list` / `task.show` | — | 列出项目所有任务 / 展示某任务当前状态卡 |
+
+## 闸门语义（Gate）
+
+阶段一与阶段三是显式闸门，行为对齐 workflow gate step：
+
+| 闸门 | 通过（approve） | 驳回（reject） |
+|---|---|---|
+| 阶段一 clarify | 复述获用户确认 → 落盘 01，放行阶段二 | 按反馈修订复述，再次确认；用户中止 → 任务暂停，00-STATE 记录挂起原因 |
+| 阶段三 review | 决策人拍板 → 落盘 03，放行阶段四 | 方案被否 → 回阶段二修订；方向性推翻 → 回阶段一 |
+
+未过闸门不得进入下一阶段；`task.track` 前建议跑 `task.check` 作执行期门禁。
 
 ## 任务生命周期（项目内循环）
 
@@ -67,13 +87,14 @@ task.init → task.constitution
 
 生成产物时严格套用 `templates/` 下对应模板：
 
-- `templates/00-constitution.md` — 项目宪法
+- `templates/00-constitution.md` — 项目宪法（版本号 + Sync Impact Report + Governance）
 - `templates/00-project.md` — 项目索引
 - `templates/01-problem.md` — 问题定义书（五要素 + 复述确认）
 - `templates/02-plan.md` — 方案骨架（议题树 / 打分表 / 假设清单 / 行动计划）
 - `templates/03-review.md` — 评审卡（SCQA + 选择题 + 会议结论）
 - `templates/04-log.md` — 执行周志（已完成/进行中/待解决/下一步/需要支持）
 - `templates/05-aar.md` — AAR 复盘卡（四问 + 规则沉淀）
+- `templates/checklist.md` — 质量门清单（task.check 落盘用，CHKxxx 编号，reviewer-owned 语义）
 
 ## 裁剪规则（按"做错返工成本"判断）
 
@@ -88,10 +109,11 @@ task.init → task.constitution
 
 ## 执行规则
 
-1. **宪法规则**：宪法未立时，task.new 应先提示 task.constitution（用户明确跳过才允许）；每个阶段产物落盘前自查"是否违反宪法红线/决策原则"，冲突点写进产物文件的宪法校验行。宪法修订只能追加修订记录，不改写历史条款。
-2. **阶段一**最多向用户提问一轮（≤6 问），缺什么问什么；然后输出一段话复述请用户确认，确认后才写 01-problem.md。禁止拿猜测当澄清。
-3. **阶段二**议题树必须自查 MECE；80% 精力应压在前 20% 关键议题上；每个假设必须可证伪（写明"错了用什么事实验证"）。
-4. **阶段三**必须输出"方案 A/B/C + 推荐项 + 理由 + 风险 + 预案"，禁止只抛问答题；结论区必须记录三件事：拍板了什么、否了什么、待定什么。
-5. **阶段四**每次 track 前建议跑一次 task.check；每周检查：当前工作能否追溯到 02/03？假设有没有被推翻？有没有黄灯/红灯要提前预警？
-6. **回溯触发**：用户说"方向变了 / 假设被推翻 / 领导否了"，无论当前在哪个阶段，一律回到 task.review 重走确认。
-7. **阶段五与收尾**：复盘结论必须写成可执行规则，不允许只写感受；判定规则归属——适用于整个项目的晋升进宪法（带来源任务），仅适用本任务的留在 05-aar.md；task.done 后主动询问是否 specify 下一个任务。
+1. **宪法规则**：宪法未立时，task.new 应先提示 task.constitution（用户明确跳过才允许）；每个阶段产物落盘前自查"是否违反宪法红线/决策原则"，冲突点写进产物文件的宪法校验行。宪法修订只能追加修订记录 + 文件头 Sync Impact Report，不改写历史条款；版本号遵守语义化——红线/原则语义变化 MAJOR，新增原则或扩展 MINOR，措辞澄清 PATCH。
+2. **编号规则**：task.new 按 `tasks/` 下现有最大 NNN + 1 分配三位编号；有 `scripts/task-new.sh` 时优先用脚本。旧项目无编号目录可直接沿用原名，不强制重命名。
+3. **阶段一**最多向用户提问一轮（≤6 问），缺什么问什么；然后输出一段话复述请用户确认，确认后才写 01-problem.md。禁止拿猜测当澄清。
+4. **阶段二**议题树必须自查 MECE；80% 精力应压在前 20% 关键议题上；每个假设必须可证伪（写明"错了用什么事实验证"）。
+5. **阶段三**必须输出"方案 A/B/C + 推荐项 + 理由 + 风险 + 预案"，禁止只抛问答题；结论区必须记录三件事：拍板了什么、否了什么、待定什么。
+6. **阶段四**每次 track 前建议跑一次 task.check；每周检查：当前工作能否追溯到 02/03？假设有没有被推翻？有没有黄灯/红灯要提前预警？
+7. **回溯触发**：用户说"方向变了 / 假设被推翻 / 领导否了"，无论当前在哪个阶段，一律回到 task.review 重走确认。
+8. **阶段五与收尾**：复盘结论必须写成可执行规则，不允许只写感受；判定规则归属——适用于整个项目的晋升进宪法（带来源任务），仅适用本任务的留在 05-aar.md；task.done 后主动询问是否 specify 下一个任务。
