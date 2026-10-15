@@ -6,6 +6,8 @@
 
 *任务澄清 → 方案编制 → 答疑确认 → 执行追踪 → 复盘沉淀*
 
+**简体中文** | [English](README.en.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-purple)](#-安装)
 [![Platform](https://img.shields.io/badge/Platform-WorkBuddy%20%7C%20Claude%20%7C%20Any%20Agent-green)](#-安装)
@@ -105,7 +107,7 @@ AI：复述确认："我理解这件事是……最终要交……" 确认后落
 .task-kit/
 ├── CONSTITUTION.md        # 项目宪法
 ├── PROJECT.md             # 项目索引 + Backlog
-└── tasks/<任务slug>/
+└── tasks/NNN-slug/
     ├── 00-STATE.md        # 状态卡（跨会话续接锚点）
     ├── 01-problem.md      # 问题定义书
     ├── 02-plan.md         # 方案骨架
@@ -118,7 +120,8 @@ AI：复述确认："我理解这件事是……最终要交……" 确认后落
 
 ```
 task_kit/
-├── README.md                          # 本文件
+├── README.md                          # 本文件（简体中文）
+├── README.en.md                       # 英文版
 ├── LICENSE                            # MIT
 ├── docs/
 │   └── spec-driven.md                 # 方法论详解：底层逻辑、五段式拆解、裁剪规则
