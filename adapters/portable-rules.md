@@ -15,7 +15,6 @@
 │   ├── CONSTITUTION.md    # 项目宪法：版本号+Sync Impact Report/使命/决策原则/红线/经验升级区/Governance
 │   ├── PROJECT.md         # 项目索引：任务清单、状态、跨任务依赖、Backlog
 │   └── scripts/task-new.sh
-├── quickstart.md          # 快速上手（task.init 生成）
 ├── materials/             # 共享素材库：导入的素材整理归类后存放（跨任务复用）
 ├── outputs/               # 共享输出：跨任务共享的产出
 └── tasks/<NNN-slug>/      # 三位序号（001、002…）+ 短 slug
@@ -26,6 +25,7 @@
     ├── 04-log.md          # 执行周志（追加式）
     ├── 05-aar.md          # 复盘卡
     ├── 06-research.md     # 调研记录（按需）
+    ├── quickstart.md      # 快速上手（首个 task.new 生成，仅一次）
     ├── checklists/        # 质量门清单（task.check 落盘，CHKxxx 编号）
     ├── materials/         # 任务私有素材：中间产物、临时分析
     └── outputs/           # 任务默认输出：未指定地址的工作与输出落这里
@@ -35,9 +35,9 @@
 每次写完产物同步更新 00-STATE.md；任务状态变化同步 PROJECT.md。
 
 ## 命令（用户说人话，按语义识别）
-- **task.init <项目名>**：建 `.task-kit/` 骨架 + 根目录 quickstart.md、materials/、outputs/，引导立宪法
+- **task.init <项目名>**：建 `.task-kit/` 骨架 + 根目录 materials/、outputs/，引导立宪法
+- **task.new <任务名>**：分配下一个三位编号（根 tasks/ 最大 NNN+1），建任务目录（00-STATE 初始 chain_grants=0），登记 PROJECT.md；项目内无 quickstart.md 时在本任务目录生成一份（仅首个任务），停在阶段一入口，不开始提问
 - **task.constitution**：制定/修订宪法。含：版本号+文件头 Sync Impact Report、使命与价值优先级、决策原则、协作红线、流程约束、经验升级区、Governance 修订规则（版本语义化：MAJOR 红线语义变化 / MINOR 新增扩展 / PATCH 措辞澄清）。修订只追加记录，不改历史。落盘后停止
-- **task.new <任务名>**：分配下一个三位编号（根 tasks/ 最大 NNN+1），建任务目录（00-STATE 初始 chain_grants=0），登记 PROJECT.md；停在阶段一入口，不开始提问
 - **task.clarify**：先分析展示再提问，最多 2 轮（每轮 ≤6 问，缺什么问什么，禁止拿猜测当澄清）→ 一段话复述请用户确认（闸门）→ 落盘 01-task.md。落盘后停止
 - **task.plan**：基于 01 做分析展示与权衡讨论（MECE 议题树 3-5 子议题 → 影响×难度×见效速度打分排序，80% 精力压前 20% → 可证伪 Day-1 假设 → 行动计划留 ≥15% 缓冲）；不产正式 A/B/C 方案（那是 review 的事）；调研证据落 06-research.md（按需）→ 落盘 02。落盘后停止
 - **task.review**：压缩为 SCQA 汇报稿（结论前置 30 秒）+ 方案 A/B/C 选择题（含推荐、理由、风险、预案）→ 三拍板（方向/资源/风险预案）→ 会议结论记录拍板/否决/待定/下一步 owner+deadline → 落盘 03。禁止抛问答题。落盘后停止

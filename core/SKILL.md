@@ -28,7 +28,6 @@ description: 管理任务版 Spec Kit。项目级宪法约束所有任务，任�
 │   ├── PROJECT.md           # 项目索引：任务清单、状态、跨任务依赖、Backlog
 │   └── scripts/
 │       └── task-new.sh      # 可选脚手架：自动分配编号建任务目录（无脚本时 task.new 手工按规则编号）
-├── quickstart.md            # 快速上手（task.init 生成）
 ├── materials/               # 共享素材库：导入的素材整理归类后存放（跨任务复用）
 ├── outputs/                 # 共享输出：跨任务共享的产出
 └── tasks/
@@ -40,6 +39,7 @@ description: 管理任务版 Spec Kit。项目级宪法约束所有任务，任�
         ├── 04-log.md        # 执行周志，追加式（阶段四产出）
         ├── 05-aar.md        # 复盘卡（阶段五产出）
         ├── 06-research.md   # 调研记录（阶段二按需产出，模板 06-research.md）
+        ├── quickstart.md    # 快速上手（首个 task.new 生成，仅一次）
         ├── checklists/      # 质量门产物（task.check 落盘，CHKxxx 编号）
         ├── materials/       # 任务私有素材：中间产物、临时分析
         └── outputs/         # 任务默认输出：未指定地址的工作与输出落这里
@@ -107,9 +107,9 @@ description: 管理任务版 Spec Kit。项目级宪法约束所有任务，任�
 
 | 指令 | 对应 Spec Kit | 动作 |
 |---|---|---|
-| `task.init <项目名>` | — | 建 `.task-kit/` 骨架 + 根目录 quickstart.md、materials/、outputs/（不建 tasks/），引导立宪法 |
+| `task.init <项目名>` | — | 建 `.task-kit/` 骨架 + 根目录 materials/、outputs/（不建 tasks/、不生成 quickstart.md），引导立宪法 |
 | `task.constitution` | `/constitution` | 制定或修订项目宪法（套用 templates/00-constitution.md），修订须追加修订记录；落盘后停止 |
-| `task.new <任务名>` | `/specify` | 分配下一个三位编号（根 tasks/ 下最大 NNN+1），建任务目录 + 00-STATE.md（模板 00-state.md），登记进 PROJECT.md；停在阶段一入口，不开始提问 |
+| `task.new <任务名>` | `/specify` | 分配下一个三位编号（根 tasks/ 下最大 NNN+1），建任务目录 + 00-STATE.md（模板 00-state.md），登记进 PROJECT.md；项目内无 quickstart.md 时在本任务目录生成一份（仅首个任务发生，模板 quickstart.md）；停在阶段一入口，不开始提问 |
 | `task.clarify` | `/specify`+`/clarify` | 阶段一闸门：分析展示 + 提问（最多 2 轮 × 每轮 ≤6 问）→ 用户确认复述后写 01-task.md；落盘后停止 |
 | `task.plan` | `/plan`+`/tasks` | 阶段二：基于 01 做分析展示与权衡讨论（议题树、假设、思路对比），不产正式方案；落盘 02-plan.md（+按需 06-research.md）后停止 |
 | `task.review` | 规格评审 | 阶段三闸门：把 02 压缩成 SCQA + A/B/C 选择题汇报稿 → 三拍板 → 03-review.md 记录拍板/否决/待定；落盘后停止 |
@@ -195,7 +195,7 @@ task.init → task.constitution
 - `templates/04-log.md` — 执行周志（已完成/进行中/待解决/下一步/需要支持）
 - `templates/05-aar.md` — AAR 复盘卡（四问 + 规则沉淀）
 - `templates/06-research.md` — 调研记录（按需：Decision / Rationale / Alternatives / 证据来源）
-- `templates/quickstart.md` — 快速上手（task.init 生成到项目根）
+- `templates/quickstart.md` — 快速上手（首个 task.new 生成到任务目录，仅一次）
 - `templates/checklist.md` — 质量门清单（task.check 落盘用，CHKxxx 编号，reviewer-owned 语义）
 
 ## 裁剪规则（按"做错返工成本"判断）

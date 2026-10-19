@@ -95,8 +95,9 @@ Settings → Capabilities → Skills 上传本仓库 zip（SKILL.md 须在顶层
 - **连跑授权**：说"接下来连着跑"授权推进 1 个阶段（"连跑 N 个阶段"=N）；两个确认闸门（复述确认、三拍板）在授权下仍然必停；授权存于 00-STATE 跨会话持久；不提供无上限连跑
 - **回溯规则**：假设被推翻/方向变更按回溯边表回到 review 或 clarify，到达目标阶段即停
 - **深入沟通**：clarify 最多 2 轮提问（每轮 ≤6 问）；plan 只做分析展示与权衡讨论（调研落 06-research.md），正式 A/B/C 方案留给 review；plan/review 新增"分析记录/沟通过程"留痕字段
-- **目录契约 v2**：`tasks/` 上移至项目根（对齐 Spec Kit 的 `specs/` 模式）；`01-problem.md` 更名 `01-task.md`；新增 `00-state.md`（frontmatter 状态卡）、`06-research.md`（调研记录）、`quickstart.md`（task.init 生成）；根级 `materials/`（共享素材库）与 `outputs/`（共享输出），任务级 `materials/`/`outputs/` 分工明确
+- **目录契约 v2**：`tasks/` 上移至项目根（对齐 Spec Kit 的 `specs/` 模式）；`01-problem.md` 更名 `01-task.md`；新增 `00-state.md`（frontmatter 状态卡）、`06-research.md`（调研记录）、`quickstart.md`（首个 task.new 生成）；根级 `materials/`（共享素材库）与 `outputs/`（共享输出），任务级 `materials/`/`outputs/` 分工明确
 - **回溯边表**：track→review（假设推翻）、track→clarify（方向性推翻）、review→plan（方案被否）、review→clarify、plan→clarify
+- **quickstart 就位**：`quickstart.md` 由首个 `task.new` 生成到任务目录（仅一次），不再生成于项目根（v2.0.1 调整）
 
 ### v2.0.0 迁移说明（旧项目两步操作）
 
@@ -124,7 +125,6 @@ AI：复述确认："我理解这件事是……最终要交……" 确认后落
 │   ├── CONSTITUTION.md    # 项目宪法
 │   ├── PROJECT.md         # 项目索引 + Backlog
 │   └── scripts/task-new.sh
-├── quickstart.md          # 快速上手（task.init 生成）
 ├── materials/             # 共享素材库（导入整理归类）
 ├── outputs/               # 跨任务共享输出
 └── tasks/NNN-slug/
@@ -135,6 +135,7 @@ AI：复述确认："我理解这件事是……最终要交……" 确认后落
     ├── 04-log.md          # 执行周志（追加式）
     ├── 05-aar.md          # 复盘卡
     ├── 06-research.md     # 调研记录（按需）
+    ├── quickstart.md      # 快速上手（首个 task.new 生成）
     ├── materials/         # 任务私有素材
     └── outputs/           # 任务默认输出
 ```
@@ -162,7 +163,7 @@ task_kit/
 │       ├── 04-log.md                  # 执行周志
 │       ├── 05-aar.md                  # AAR 复盘卡
 │       ├── 06-research.md             # 调研记录（按需）
-│       ├── quickstart.md              # 快速上手（task.init 生成到项目根）
+│       ├── quickstart.md              # 快速上手（首个 task.new 生成到任务目录）
 │       └── checklist.md               # 质量门清单（task.check 落盘用）
 └── adapters/
     ├── claude-code-command.md         # Claude Code 斜杠命令适配

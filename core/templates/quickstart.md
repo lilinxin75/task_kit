@@ -12,7 +12,7 @@ task.init → task.constitution
 
 ## 首次初始化
 
-1. 对 agent 说「初始化 task-kit 项目」或 `task.init <项目名>` → 生成 `.task-kit/` 骨架、根目录 `quickstart.md`、`materials/` 与 `outputs/`
+1. 对 agent 说「初始化 task-kit 项目」或 `task.init <项目名>` → 生成 `.task-kit/` 骨架、根目录 `materials/` 与 `outputs/`（本文件 quickstart.md 由首个 `task.new` 生成到任务目录）
 2. `task.constitution` → 立宪法（宪法先行，先于一切任务）
 
 ## 一个任务的完整节奏（每步停止等你指令）
