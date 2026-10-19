@@ -5,6 +5,8 @@ description: 管理任务版 Spec Kit（Claude Code 斜杠命令适配）。把�
 
 按 task-kit 五段式工作系统推进任务：$ARGUMENTS
 
+> v2.0.0：每条阶段命令完成后停止并输出阶段完成报告；阶段推进需用户指令或连跑授权（闸门处必停）。目录契约 v2 见 core/SKILL.md。
+
 执行前先加载工作流定义（按顺序尝试）：
 1. `~/.claude/skills/task-kit/SKILL.md`（已按 Agent Skills 安装时）
 2. 本包 `core/SKILL.md`

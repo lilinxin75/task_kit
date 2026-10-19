@@ -7,7 +7,8 @@
 set -euo pipefail
 
 TASK_KIT_DIR=".task-kit"
-TASKS_DIR="$TASK_KIT_DIR/tasks"
+# v2.0.0：任务目录上移至项目根（对齐 Spec Kit 的 specs/ 模式）
+TASKS_DIR="tasks"
 SLUG_MAX_LEN=48
 
 usage() { echo "用法: $0 [--number N] <任务名>"; exit 1; }
@@ -22,10 +23,17 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 [[ -z "${TITLE:-}" ]] && usage
-[[ -d "$TASKS_DIR" ]] || { echo "错误: 未找到 $TASKS_DIR，请先运行 task.init 建项目骨架" >&2; exit 1; }
+[[ -d "$TASKS_DIR" ]] || { echo "错误: 未找到 $TASKS_DIR，请先运行 task.init 建项目骨架（v2.0.0 起任务目录在项目根 tasks/，旧项目请见 README 迁移说明）" >&2; exit 1; }
 
-# slug 化：小写英文保留，中文/空格转连字符，压缩重复连字符
-slug=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[[:space:]/\\]+/-/g; s/[^a-z0-9一-鿿-]//g; s/-+/-/g; s/^-|-+$//g')
+# slug 化：小写英文 + CJK 保留，空格/分隔符转连字符，压缩重复连字符
+# CJK 区间（一-鿿）在部分 locale/glibc 下 sed 会报 Invalid collation character——
+# 失败时回退仅 ASCII（中文标题 slug 降级为 task），脚本不中断
+_slug_in=$(printf '%s' "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[[:space:]/\\]+/-/g')
+slug=$(printf '%s' "$_slug_in" | sed -E 's/[^a-z0-9一-鿿-]//g' 2>/dev/null) || true
+if [[ -z "$slug" ]]; then
+  slug=$(printf '%s' "$_slug_in" | sed -E 's/[^a-z0-9-]//g')
+fi
+slug=$(printf '%s' "$slug" | sed -E 's/-+/-/g; s/^-|-+$//g')
 [[ -z "$slug" ]] && slug="task"
 [[ ${#slug} -gt $SLUG_MAX_LEN ]] && slug="${slug:0:$SLUG_MAX_LEN}"
 
@@ -45,21 +53,34 @@ if [[ -n "$NUMBER" ]]; then NUM=$(next_num "$NUMBER"); else
 fi
 
 DIR="$TASKS_DIR/$NUM-$slug"
-mkdir -p "$DIR/checklists" "$DIR/materials"
+mkdir -p "$DIR/checklists" "$DIR/materials" "$DIR/outputs"
 
 cat > "$DIR/00-STATE.md" <<EOF
 # 任务状态卡 · 00
 
+---
+task: "$TITLE"
+slug: "$NUM-$slug"
+stage: "clarify"
+stages_done:
+  - stage: "new"
+    artifact: "$DIR/00-STATE.md"
+next: "task.clarify"
+chain_grants: 0
+suspended_reason: null
+updated: "$(date '+%F %T')"
+---
+
 【任务名称】$TITLE
 【任务目录】$DIR
-【当前阶段】阶段一 · 任务澄清
-【更新时间】$(date '+%F %T')
+【当前状态】阶段一入口 · 待澄清
+【连跑授权余量】0
 
 ## 关键结论
 - （待澄清）
 
 ## 下一步
-- task.clarify：五要素澄清 → 复述确认 → 落盘 01-problem.md
+- task.clarify：分析展示 + 澄清提问（最多 2 轮 × 每轮 ≤6 问）→ 复述确认 → 落盘 01-task.md
 
 ## 闸门记录
 | 阶段 | 结论 | 日期 |

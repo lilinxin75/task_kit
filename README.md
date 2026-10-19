@@ -48,6 +48,7 @@ Spec Kit 的核心理念：**先定义"做什么、为什么做"，再决定"怎
 ## ✨ 核心特性
 
 - **宪法先行** — 项目级 `CONSTITUTION.md` 约束所有任务，AAR 产出的项目级规则可晋升进宪法（带来源任务与修订记录）
+- **阶段硬停止** — 每条阶段命令停在自己的边界上，输出阶段完成报告；连跑需显式授权且闸门必停，用户始终掌握推进节奏（v2.0.0）
 - **任务循环** — 项目内多任务生命周期：`init → constitution → new → clarify → plan → review → track → aar → done → 下一个任务`
 - **产物落盘** — 每个任务一个目录、六份 markdown 文件，`00-STATE.md` 是跨会话续接的锚点
 - **轻量对齐** — 给决策人做选择题（A/B/C + 推荐 + 风险 + 预案），一页纸、≤15 分钟、结论前置 30 秒
@@ -88,7 +89,21 @@ Settings → Capabilities → Skills 上传本仓库 zip（SKILL.md 须在顶层
 
 把 `adapters/portable-rules.md` 全文粘贴进规则文件（`.cursorrules`、Custom Instructions、system prompt 等）。该版本自包含，模板结构已内联。
 
-## 🚀 快速开始
+## 🆕 v2.0.0 — 流程阶段分隔
+
+- **阶段硬停止**：每条阶段命令（constitution/new/clarify/plan/review/track/aar/done）完成自身产物与闸门后停止，输出「阶段完成报告」（产物清单 / 当前状态 / 下一步）；用户未授权禁止自动推进下一阶段
+- **连跑授权**：说"接下来连着跑"授权推进 1 个阶段（"连跑 N 个阶段"=N）；两个确认闸门（复述确认、三拍板）在授权下仍然必停；授权存于 00-STATE 跨会话持久；不提供无上限连跑
+- **回溯规则**：假设被推翻/方向变更按回溯边表回到 review 或 clarify，到达目标阶段即停
+- **深入沟通**：clarify 最多 2 轮提问（每轮 ≤6 问）；plan 只做分析展示与权衡讨论（调研落 06-research.md），正式 A/B/C 方案留给 review；plan/review 新增"分析记录/沟通过程"留痕字段
+- **目录契约 v2**：`tasks/` 上移至项目根（对齐 Spec Kit 的 `specs/` 模式）；`01-problem.md` 更名 `01-task.md`；新增 `00-state.md`（frontmatter 状态卡）、`06-research.md`（调研记录）、`quickstart.md`（task.init 生成）；根级 `materials/`（共享素材库）与 `outputs/`（共享输出），任务级 `materials/`/`outputs/` 分工明确
+- **回溯边表**：track→review（假设推翻）、track→clarify（方向性推翻）、review→plan（方案被否）、review→clarify、plan→clarify
+
+### v2.0.0 迁移说明（旧项目两步操作）
+
+1. 任务目录上移：`mv .task-kit/tasks ./tasks`（然后可删除空的 `.task-kit/tasks/`）
+2. 任务定义书更名：在每个任务目录内 `mv 01-problem.md 01-task.md`
+
+## 🆕 v1.1.0 — 参照 Spec Kit 工程化形态升级
 
 ```
 你：task.init 仓储系统选型
@@ -101,19 +116,27 @@ AI：复述确认："我理解这件事是……最终要交……" 确认后落
 你：task.plan / task.review / task.track / task.aar …
 ```
 
-任务产物落盘在当前项目的 `.task-kit/` 目录：
+任务产物落盘在当前项目根目录（v2.0.0 布局）：
 
 ```
-.task-kit/
-├── CONSTITUTION.md        # 项目宪法
-├── PROJECT.md             # 项目索引 + Backlog
+项目根/
+├── .task-kit/
+│   ├── CONSTITUTION.md    # 项目宪法
+│   ├── PROJECT.md         # 项目索引 + Backlog
+│   └── scripts/task-new.sh
+├── quickstart.md          # 快速上手（task.init 生成）
+├── materials/             # 共享素材库（导入整理归类）
+├── outputs/               # 跨任务共享输出
 └── tasks/NNN-slug/
-    ├── 00-STATE.md        # 状态卡（跨会话续接锚点）
-    ├── 01-problem.md      # 问题定义书
+    ├── 00-STATE.md        # 状态卡（跨会话续接锚点，含连跑授权余量）
+    ├── 01-task.md         # 任务定义书
     ├── 02-plan.md         # 方案骨架
     ├── 03-review.md       # 评审卡
     ├── 04-log.md          # 执行周志（追加式）
-    └── 05-aar.md          # 复盘卡
+    ├── 05-aar.md          # 复盘卡
+    ├── 06-research.md     # 调研记录（按需）
+    ├── materials/         # 任务私有素材
+    └── outputs/           # 任务默认输出
 ```
 
 ## 📁 仓库结构
@@ -129,14 +152,17 @@ task_kit/
 │   ├── SKILL.md                       # 工作流定义（Agent Skills 标准格式）
 │   ├── scripts/
 │   │   └── task-new.sh                # 可选脚手架：自动分配三位编号建任务目录
-│   └── templates/                     # 8 个阶段模板
+│   └── templates/                     # 11 个契约模板
 │       ├── 00-constitution.md         # 项目宪法（版本号 + Sync Impact Report + Governance）
 │       ├── 00-project.md              # 项目索引
-│       ├── 01-problem.md              # 问题定义书
-│       ├── 02-plan.md                 # 方案骨架
-│       ├── 03-review.md               # 评审卡
+│       ├── 00-state.md                # 任务状态卡（frontmatter + 状态卡四栏）
+│       ├── 01-task.md                 # 任务定义书（五要素 + 澄清记录 + 复述确认）
+│       ├── 02-plan.md                 # 方案骨架（含分析记录/沟通过程）
+│       ├── 03-review.md               # 评审卡（含分析记录/沟通过程）
 │       ├── 04-log.md                  # 执行周志
 │       ├── 05-aar.md                  # AAR 复盘卡
+│       ├── 06-research.md             # 调研记录（按需）
+│       ├── quickstart.md              # 快速上手（task.init 生成到项目根）
 │       └── checklist.md               # 质量门清单（task.check 落盘用）
 └── adapters/
     ├── claude-code-command.md         # Claude Code 斜杠命令适配
